@@ -4,37 +4,72 @@ import './Game.css';
 import Board from './Board';
 
 export default class Game extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      history: [
-        {
-          squares: Array(9).fill(null)
-        }
-      ],
-      stepNumber: 0,
-      xIsNext: true
-    };
+  // how long it takes for the opponent "to think"
+  static PLAYER_SYSTEM_TIMEOUT = 1000;
+
+  state = {
+    history: [{ squares: Array(9).fill(null) }],
+    stepNumber: 0,
+    systemThinking: false,
+    xIsNext: true
+  };
+
+  getCurrentSquares() {
+    const { history, stepNumber } = this.state;
+
+    const historySlice = history.slice(0, stepNumber + 1);
+    const current = historySlice[historySlice.length - 1];
+
+    return [...current.squares];
   }
 
-  handleClick(i) {
-    const history = this.state.history.slice(0, this.state.stepNumber + 1);
-    const current = history[history.length - 1];
-    const squares = current.squares.slice();
-    if (calculateWinner(squares) || squares[i]) {
+  doStep(squareIndex, isPlayerX, callback) {
+    const { history, stepNumber, xIsNext } = this.state;
+
+    const historySlice = history.slice(0, stepNumber + 1);
+    const squares = this.getCurrentSquares();
+
+    if (calculateWinner(squares) || squares[squareIndex] || isPlayerX !== xIsNext) {
       return;
     }
-    squares[i] = this.state.xIsNext ? 'X' : 'O';
-    this.setState({
-      history: history.concat([
-        {
-          squares: squares
-        }
-      ]),
-      stepNumber: history.length,
-      xIsNext: !this.state.xIsNext
-    });
+
+    squares[squareIndex] = isPlayerX ? 'X' : 'O';
+
+    this.setState(
+      {
+        history: [...historySlice, { squares }],
+        stepNumber: historySlice.length,
+        xIsNext: !isPlayerX
+      },
+      callback
+    );
   }
+
+  playSystemWithDelay = () => {
+    this.setState({ systemThinking: true });
+    setTimeout(this.playSystem, Game.PLAYER_SYSTEM_TIMEOUT);
+  };
+
+  playSystem = () => {
+    this.setState({ systemThinking: false });
+    const squares = this.getCurrentSquares();
+
+    if (calculateWinner(squares)) {
+      return;
+    }
+
+    // for simplicity, system plays randomly
+    let squareIndex;
+    do {
+      squareIndex = Math.floor(Math.random() * 9);
+    } while (squares[squareIndex]);
+
+    this.doStep(squareIndex, false);
+  };
+
+  handleClick = squareIndex => {
+    this.doStep(squareIndex, true, this.playSystemWithDelay);
+  };
 
   jumpTo(step) {
     this.setState({
@@ -44,30 +79,32 @@ export default class Game extends React.Component {
   }
 
   render() {
-    const history = this.state.history;
-    const current = history[this.state.stepNumber];
+    const { history, stepNumber, systemThinking, xIsNext } = this.state;
+    const current = history[stepNumber];
     const winner = calculateWinner(current.squares);
 
     const moves = history.map((step, move) => {
       const desc = move ? 'Go to move #' + move : 'Go to game start';
       return (
         <li key={move}>
-          <button onClick={() => this.jumpTo(move)}>{desc}</button>
+          <button disabled={systemThinking} onClick={() => this.jumpTo(move)}>
+            {desc}
+          </button>
         </li>
       );
     });
 
     let status;
     if (winner) {
-      status = 'Winner: ' + winner;
+      status = `Winner: ${winner === 'X' ? 'You' : 'Person 2'}`;
     } else {
-      status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
+      status = `Next player: ${xIsNext ? 'You' : 'Person 2'}`;
     }
 
     return (
       <div className="game">
         <div className="game-board">
-          <Board squares={current.squares} onClick={i => this.handleClick(i)} />
+          <Board squares={current.squares} onClick={this.handleClick} />
         </div>
         <div className="game-info">
           <div>{status}</div>
