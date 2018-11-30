@@ -2,6 +2,7 @@ import React from 'react';
 
 import './Game.css';
 import Board from './Board';
+import WinningLine from './WinningLine';
 
 export default class Game extends React.Component {
   // how long it takes for the opponent "to think"
@@ -96,7 +97,7 @@ export default class Game extends React.Component {
 
     let status;
     if (winner) {
-      status = `Winner: ${winner === 'X' ? 'You' : 'Person 2'}`;
+      status = `Winner: ${winner.player}`;
     } else {
       status = `Next player: ${xIsNext ? 'You' : 'Person 2'}`;
     }
@@ -105,6 +106,7 @@ export default class Game extends React.Component {
       <div className="game">
         <div className="game-board">
           <Board squares={current.squares} onClick={this.handleClick} />
+          {winner && <WinningLine line={winner.line} />}
         </div>
         <div className="game-info">
           <div>{status}</div>
@@ -128,11 +130,16 @@ function calculateWinner(squares) {
     [0, 4, 8],
     [2, 4, 6]
   ];
+
   for (let i = 0; i < lines.length; i++) {
     const [a, b, c] = lines[i];
     if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-      return squares[a];
+      return {
+        player: squares[a] === 'X' ? 'You' : 'Person 2',
+        line: lines[i]
+      };
     }
   }
+
   return null;
 }

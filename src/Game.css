@@ -10,8 +10,13 @@ ul {
 .game {
   display: flex;
   flex-direction: row;
+  align-items: flex-start;
 }
 
 .game-info {
   margin-left: 20px;
+}
+
+.game-board {
+  position: relative;
 }

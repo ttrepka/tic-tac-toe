@@ -1,0 +1,39 @@
+.winning-line {
+  position: absolute;
+  border: 2px solid black;
+  animation-name: winning-line-keyframes;
+  animation-duration: 3s;
+}
+
+.winning-line--horizontal,
+.winning-line--diagonal {
+  left: 16.5px; /* half of square */
+  right: 16.5px; /* half of square */
+  top: 14.5px; /* half of square - half of line */
+}
+
+.winning-line--vertical {
+  left: 14.5px;
+  top: 16.5px;
+  bottom: 16.5px;
+}
+
+.winning-line--diagonal {
+  transform: rotate(45deg);
+  top: calc(50% - 2px);
+  left: 2px;
+  right: 2px;
+}
+
+.winning-line--diagonal-opposite {
+  transform: rotate(-45deg);
+}
+
+@keyframes winning-line-keyframes {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
