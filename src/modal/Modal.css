@@ -1,0 +1,24 @@
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  overflow-y: auto;
+}
+
+.modal {
+  background-color: #fff;
+  width: 600px;
+  min-height: 300px;
+  margin: 20% auto;
+  padding: 20px;
+}
+
+.modal button {
+  border: 0;
+  background: none;
+  float: right;
+  font-size: 20px;
+}
