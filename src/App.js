@@ -1,31 +1,23 @@
 import React, { useState } from 'react';
 
+import ChampionshipModal from './stats/Championship';
 import Game from './game/Game';
 import Modal from './modal/Modal';
 import Stats from './stats/Stats';
 
 const App = () => {
-  const [isOpen, setIsOpen] = useState(true);
+  const [isModalOpen, setModalOpen] = useState(false);
 
-  const onClose = () => setIsOpen(false);
+  const closeModal = () => setModalOpen(false);
+  const openModal = () => setModalOpen(true);
 
   return (
     <>
       <Game />
       <Stats />
-      <Modal isOpen={isOpen} onClose={onClose}>
-        <h1>Championship Stats</h1>
-        <ul>
-          <li>
-            Won: <b>1</b>
-          </li>
-          <li>
-            Lost: <b>1</b>
-          </li>
-          <li>
-            Tied: <b>1</b>
-          </li>
-        </ul>
+      <button onClick={openModal}>Championship Stats</button>
+      <Modal isOpen={isModalOpen} onClose={closeModal}>
+        <ChampionshipModal />
       </Modal>
     </>
   );
