@@ -14,9 +14,24 @@ ul {
 }
 
 .game-info {
-  margin-left: 20px;
+  margin-left: 50px;
 }
 
-.game-board {
-  position: relative;
+.game-info h2 {
+  font-weight: 300;
+  margin-top: 0;
+}
+
+.moves {
+  padding: 0;
+  margin: 10px 0;
+  list-style: none;
+}
+
+.moves li {
+  margin: 5px 0;
+}
+
+.move.active {
+  background-color: #ebf376;
 }

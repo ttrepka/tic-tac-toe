@@ -82,7 +82,11 @@ class Game extends React.Component {
       const desc = move ? 'Go to move #' + move : 'Go to game start';
       return (
         <li key={move}>
-          <button disabled={systemThinking} onClick={() => jumpTo(move)}>
+          <button
+            className={`move ${move === stepNumber ? 'active' : ''}`}
+            disabled={systemThinking}
+            onClick={() => jumpTo(move)}
+          >
             {desc}
           </button>
         </li>
@@ -91,25 +95,25 @@ class Game extends React.Component {
 
     let status;
     if (winner && winner.player) {
-      status = `Winner: ${winner.player === 'X' ? 'You' : 'Person 2'}`;
+      status = `Game over: <b>${winner.player === 'X' ? 'You' : 'Person 2'} won</b>`;
     } else if (winner && !winner.player) {
-      status = 'Draw';
+      status = 'Game over: <b>Draw</b>';
     } else {
-      status = `Next player: ${xIsNext ? 'You' : 'Person 2'}`;
+      status = `Next player: <b>${xIsNext ? 'You' : 'Person 2'}</b>`;
     }
 
     return (
       <div className="game">
         <div className="game-board">
-          <Board squares={current.squares} onClick={this.handleClick} />
+          <Board disabled={systemThinking} squares={current.squares} onClick={this.handleClick} />
           {winner && <WinningLine line={winner.line} />}
         </div>
         <div className="game-info">
-          <div>{status}</div>
+          <h2 dangerouslySetInnerHTML={{ __html: status }} />
           {winner ? (
             <button onClick={this.handleRestartClick}>Start new game</button>
           ) : (
-            <ol>{moves}</ol>
+            <ul className="moves">{moves}</ul>
           )}
         </div>
       </div>

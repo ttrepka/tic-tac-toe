@@ -22,8 +22,12 @@ const App = () => {
   return (
     <Provider store={store}>
       <>
+        <h1>Tic Tac Toe</h1>
         <Game />
+
+        <h2>Stats</h2>
         <Stats />
+
         <button onClick={openModal}>Championship Stats</button>
         <Modal isOpen={isModalOpen} onClose={closeModal}>
           <ChampionshipModal />

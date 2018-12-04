@@ -13,6 +13,11 @@
   width: 34px;
 }
 
+.square.disabled:hover {
+  cursor: not-allowed;
+  background: none;
+}
+
 .square:focus {
   outline: none;
 }
