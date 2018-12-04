@@ -1,9 +1,9 @@
 import { combineReducers } from 'redux';
 
-import history from './history/reducer';
+import game from './game/reducer';
 import stats from './stats/reducer';
 
 export default combineReducers({
-  history,
+  game,
   stats
 });

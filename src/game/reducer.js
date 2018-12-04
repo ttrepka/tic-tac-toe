@@ -6,7 +6,7 @@ const INITIAL_STATE = {
 
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
-    case 'history/JUMP_TO':
+    case 'game/JUMP_TO':
       const { step } = action;
 
       return {
@@ -15,7 +15,7 @@ export default (state = INITIAL_STATE, action) => {
         xIsNext: step % 2 === 0
       };
 
-    case 'history/MAKE_MOVE':
+    case 'game/MAKE_MOVE':
       const { isPlayerX, squareIndex } = action;
       const { steps, stepNumber } = state;
 

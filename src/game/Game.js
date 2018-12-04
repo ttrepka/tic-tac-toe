@@ -3,9 +3,8 @@ import { connect } from 'react-redux';
 
 import './Game.css';
 import Board from './Board';
-import Stats from './stats/Stats';
 import WinningLine from './WinningLine';
-import { jumpTo, makeMove } from './history/actions';
+import { jumpTo, makeMove } from './actions';
 
 class Game extends React.Component {
   // how long it takes for the opponent "to think"
@@ -98,14 +97,13 @@ class Game extends React.Component {
           <div>{status}</div>
           <ol>{moves}</ol>
         </div>
-        <Stats />
       </div>
     );
   }
 }
 
 export default connect(
-  ({ history }) => ({ ...history }),
+  ({ game: { steps, stepNumber, xIsNext } }) => ({ steps, stepNumber, xIsNext }),
   { jumpTo, makeMove }
 )(Game);
 

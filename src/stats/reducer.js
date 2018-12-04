@@ -6,7 +6,7 @@ const INITIAL_STATE = {
 
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
-    case 'history/MAKE_MOVE':
+    case 'game/MAKE_MOVE':
       const { isPlayerX, moveTime } = action;
       const { playerMoves, playerTime, systemMoves } = state;
 
