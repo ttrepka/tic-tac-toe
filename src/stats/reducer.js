@@ -1,4 +1,4 @@
-const INITIAL_STATE = {
+export const INITIAL_STATE = {
   playerMoves: 0,
   playerTime: 0,
   systemMoves: 0,

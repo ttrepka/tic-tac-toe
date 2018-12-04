@@ -1,6 +1,6 @@
 import { calculateWinner } from './helpers';
 
-const INITIAL_STATE = {
+export const INITIAL_STATE = {
   steps: [{ squares: Array(9).fill(null) }],
   stepNumber: 0,
   winner: null,
