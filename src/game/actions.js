@@ -9,3 +9,7 @@ export const makeMove = (squareIndex, isPlayerX, moveTime) => ({
   moveTime,
   squareIndex
 });
+
+export const restart = () => ({
+  type: 'game/RESTART'
+});

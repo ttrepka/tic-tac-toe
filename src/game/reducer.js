@@ -1,6 +1,9 @@
+import { calculateWinner } from './helpers';
+
 const INITIAL_STATE = {
   steps: [{ squares: Array(9).fill(null) }],
   stepNumber: 0,
+  winner: null,
   xIsNext: true
 };
 
@@ -28,8 +31,12 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         steps: [...stepsSlice, { squares }],
         stepNumber: stepsSlice.length,
+        winner: calculateWinner(squares),
         xIsNext: !isPlayerX
       };
+
+    case 'game/RESTART':
+      return INITIAL_STATE;
 
     default:
       return state;

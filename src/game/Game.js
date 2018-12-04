@@ -4,7 +4,8 @@ import { connect } from 'react-redux';
 import './Game.css';
 import Board from './Board';
 import WinningLine from './WinningLine';
-import { jumpTo, makeMove } from './actions';
+import { jumpTo, makeMove, restart } from './actions';
+import { gameOver } from '../stats/actions';
 
 class Game extends React.Component {
   // how long it takes for the opponent "to think"
@@ -20,13 +21,17 @@ class Game extends React.Component {
     if (!prevProps.xIsNext && this.props.xIsNext) {
       this.playerMoveStart = Date.now();
     }
+
+    if (!prevProps.winner && this.props.winner) {
+      this.props.gameOver(this.props.winner.player);
+    }
   }
 
   canPlay(squareIndex, isPlayerX) {
-    const { steps, stepNumber, xIsNext } = this.props;
+    const { steps, stepNumber, winner, xIsNext } = this.props;
     const { squares } = steps[stepNumber];
 
-    return !calculateWinner(squares) && !squares[squareIndex] && isPlayerX === xIsNext;
+    return !winner && !squares[squareIndex] && isPlayerX === xIsNext;
   }
 
   playSystemWithDelay = () => {
@@ -37,10 +42,10 @@ class Game extends React.Component {
   playSystem = () => {
     this.setState({ systemThinking: false });
 
-    const { steps, stepNumber } = this.props;
+    const { steps, stepNumber, winner } = this.props;
     const { squares } = steps[stepNumber];
 
-    if (calculateWinner(squares)) {
+    if (winner) {
       return;
     }
 
@@ -62,18 +67,22 @@ class Game extends React.Component {
     }
   };
 
+  handleRestartClick = () => {
+    this.playerMoveStart = Date.now();
+    this.props.restart();
+  };
+
   render() {
-    const { steps, stepNumber, xIsNext } = this.props;
+    const { jumpTo, steps, stepNumber, winner, xIsNext } = this.props;
     const { systemThinking } = this.state;
 
     const current = steps[stepNumber];
-    const winner = calculateWinner(current.squares);
 
     const moves = steps.map((step, move) => {
       const desc = move ? 'Go to move #' + move : 'Go to game start';
       return (
         <li key={move}>
-          <button disabled={systemThinking} onClick={() => this.props.jumpTo(move)}>
+          <button disabled={systemThinking} onClick={() => jumpTo(move)}>
             {desc}
           </button>
         </li>
@@ -81,8 +90,10 @@ class Game extends React.Component {
     });
 
     let status;
-    if (winner) {
-      status = `Winner: ${winner.player}`;
+    if (winner && winner.player) {
+      status = `Winner: ${winner.player === 'X' ? 'You' : 'Person 2'}`;
+    } else if (winner && !winner.player) {
+      status = 'Draw';
     } else {
       status = `Next player: ${xIsNext ? 'You' : 'Person 2'}`;
     }
@@ -95,7 +106,11 @@ class Game extends React.Component {
         </div>
         <div className="game-info">
           <div>{status}</div>
-          <ol>{moves}</ol>
+          {winner ? (
+            <button onClick={this.handleRestartClick}>Start new game</button>
+          ) : (
+            <ol>{moves}</ol>
+          )}
         </div>
       </div>
     );
@@ -103,33 +118,6 @@ class Game extends React.Component {
 }
 
 export default connect(
-  ({ game: { steps, stepNumber, xIsNext } }) => ({ steps, stepNumber, xIsNext }),
-  { jumpTo, makeMove }
+  ({ game: { steps, stepNumber, winner, xIsNext } }) => ({ steps, stepNumber, winner, xIsNext }),
+  { gameOver, jumpTo, makeMove, restart }
 )(Game);
-
-// ========================================
-
-function calculateWinner(squares) {
-  const lines = [
-    [0, 1, 2],
-    [3, 4, 5],
-    [6, 7, 8],
-    [0, 3, 6],
-    [1, 4, 7],
-    [2, 5, 8],
-    [0, 4, 8],
-    [2, 4, 6]
-  ];
-
-  for (let i = 0; i < lines.length; i++) {
-    const [a, b, c] = lines[i];
-    if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-      return {
-        player: squares[a] === 'X' ? 'You' : 'Person 2',
-        line: lines[i]
-      };
-    }
-  }
-
-  return null;
-}

@@ -1,7 +1,12 @@
 const INITIAL_STATE = {
   playerMoves: 0,
   playerTime: 0,
-  systemMoves: 0
+  systemMoves: 0,
+  overallScore: {
+    won: 0,
+    lost: 0,
+    tied: 0
+  }
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -22,6 +27,27 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         systemMoves: systemMoves + 1
       };
+
+    case 'stats/GAME_OVER':
+      const { winningPlayer } = action;
+      const { overallScore } = state;
+
+      const newState = {
+        ...state,
+        overallScore: {
+          ...overallScore
+        }
+      };
+
+      if (winningPlayer === 'X') {
+        newState.overallScore.won++;
+      } else if (winningPlayer === 'O') {
+        newState.overallScore.lost++;
+      } else {
+        newState.overallScore.tied++;
+      }
+
+      return newState;
 
     default:
       return state;
