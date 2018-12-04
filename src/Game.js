@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 
 import './Game.css';
 import Board from './Board';
+import Stats from './stats/Stats';
 import WinningLine from './WinningLine';
 import { jumpTo, makeMove } from './history/actions';
 
@@ -10,9 +11,17 @@ class Game extends React.Component {
   // how long it takes for the opponent "to think"
   static PLAYER_SYSTEM_TIMEOUT = 1000;
 
+  playerMoveStart = Date.now();
+
   state = {
     systemThinking: false
   };
+
+  componentDidUpdate(prevProps) {
+    if (!prevProps.xIsNext && this.props.xIsNext) {
+      this.playerMoveStart = Date.now();
+    }
+  }
 
   canPlay(squareIndex, isPlayerX) {
     const { steps, stepNumber, xIsNext } = this.props;
@@ -47,7 +56,9 @@ class Game extends React.Component {
 
   handleClick = squareIndex => {
     if (this.canPlay(squareIndex, true)) {
-      this.props.makeMove(squareIndex, true);
+      const moveTime = Date.now() - this.playerMoveStart;
+
+      this.props.makeMove(squareIndex, true, moveTime);
       this.playSystemWithDelay();
     }
   };
@@ -87,6 +98,7 @@ class Game extends React.Component {
           <div>{status}</div>
           <ol>{moves}</ol>
         </div>
+        <Stats />
       </div>
     );
   }

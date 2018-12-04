@@ -3,8 +3,9 @@ export const jumpTo = step => ({
   step
 });
 
-export const makeMove = (squareIndex, isPlayerX) => ({
+export const makeMove = (squareIndex, isPlayerX, moveTime) => ({
   type: 'history/MAKE_MOVE',
-  squareIndex,
-  isPlayerX
+  isPlayerX,
+  moveTime,
+  squareIndex
 });
