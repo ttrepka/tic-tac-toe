@@ -3,8 +3,9 @@ import { connect } from 'react-redux';
 
 import './Game.css';
 import Board from './Board';
+import Moves from './Moves';
 import WinningLine from './WinningLine';
-import { jumpTo, makeMove, restart } from './actions';
+import { makeMove, restart } from './actions';
 import { gameOver } from '../stats/actions';
 
 class Game extends React.Component {
@@ -73,25 +74,10 @@ class Game extends React.Component {
   };
 
   render() {
-    const { jumpTo, steps, stepNumber, winner, xIsNext } = this.props;
+    const { steps, stepNumber, winner, xIsNext } = this.props;
     const { systemThinking } = this.state;
 
     const current = steps[stepNumber];
-
-    const moves = steps.map((step, move) => {
-      const desc = move ? 'Go to move #' + move : 'Go to game start';
-      return (
-        <li key={move}>
-          <button
-            className={`move ${move === stepNumber ? 'active' : ''}`}
-            disabled={systemThinking}
-            onClick={() => jumpTo(move)}
-          >
-            {desc}
-          </button>
-        </li>
-      );
-    });
 
     let status;
     if (winner && winner.player) {
@@ -105,7 +91,11 @@ class Game extends React.Component {
     return (
       <div className="game">
         <div className="game-board">
-          <Board disabled={systemThinking} squares={current.squares} onClick={this.handleClick} />
+          <Board
+            disabled={systemThinking || winner}
+            onClick={this.handleClick}
+            squares={current.squares}
+          />
           {winner && <WinningLine line={winner.line} />}
         </div>
         <div className="game-info">
@@ -113,7 +103,7 @@ class Game extends React.Component {
           {winner ? (
             <button onClick={this.handleRestartClick}>Start new game</button>
           ) : (
-            <ul className="moves">{moves}</ul>
+            <Moves currentMove={stepNumber} disabled={systemThinking} moveCount={steps.length} />
           )}
         </div>
       </div>
@@ -123,5 +113,5 @@ class Game extends React.Component {
 
 export default connect(
   ({ game: { steps, stepNumber, winner, xIsNext } }) => ({ steps, stepNumber, winner, xIsNext }),
-  { gameOver, jumpTo, makeMove, restart }
+  { gameOver, makeMove, restart }
 )(Game);

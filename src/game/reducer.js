@@ -1,8 +1,8 @@
 import { calculateWinner } from './helpers';
 
 export const INITIAL_STATE = {
-  steps: [{ squares: Array(9).fill(null) }],
   stepNumber: 0,
+  steps: [{ squares: Array(9).fill(null) }],
   winner: null,
   xIsNext: true
 };
@@ -20,7 +20,7 @@ export default (state = INITIAL_STATE, action) => {
 
     case 'game/MAKE_MOVE':
       const { isPlayerX, squareIndex } = action;
-      const { steps, stepNumber } = state;
+      const { stepNumber, steps } = state;
 
       const stepsSlice = steps.slice(0, stepNumber + 1);
 
@@ -29,8 +29,8 @@ export default (state = INITIAL_STATE, action) => {
 
       return {
         ...state,
-        steps: [...stepsSlice, { squares }],
         stepNumber: stepsSlice.length,
+        steps: [...stepsSlice, { squares }],
         winner: calculateWinner(squares),
         xIsNext: !isPlayerX
       };

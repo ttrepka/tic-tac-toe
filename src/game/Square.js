@@ -2,15 +2,15 @@ import React from 'react';
 
 import './Square.css';
 
-const Square = props => {
-  const disabled = props.value || props.disabled;
+const Square = ({ disabled, onClick, value }) => {
+  const isDisabled = value || disabled;
 
   return (
     <button
-      className={`square ${disabled ? 'disabled' : ''}`}
-      onClick={disabled ? null : props.onClick}
+      className={`square ${isDisabled ? 'disabled' : ''}`}
+      onClick={isDisabled ? null : onClick}
     >
-      {props.value}
+      {value}
     </button>
   );
 };

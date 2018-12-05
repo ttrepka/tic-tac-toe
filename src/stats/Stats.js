@@ -16,7 +16,7 @@ const Stats = ({ playerMoves, playerTime, systemMoves }) => (
   </ul>
 );
 
-export default connect(({ stats: { playerMoves, playerTime, systemMoves } }) => ({
+export default connect(({ stats: { currentGame: { playerMoves, playerTime, systemMoves } } }) => ({
   playerMoves,
   playerTime,
   systemMoves

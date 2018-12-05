@@ -1,7 +1,9 @@
 export const INITIAL_STATE = {
-  playerMoves: 0,
-  playerTime: 0,
-  systemMoves: 0,
+  currentGame: {
+    playerMoves: 0,
+    playerTime: 0,
+    systemMoves: 0
+  },
   overallScore: {
     won: 0,
     lost: 0,
@@ -13,19 +15,33 @@ export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case 'game/MAKE_MOVE':
       const { isPlayerX, moveTime } = action;
-      const { playerMoves, playerTime, systemMoves } = state;
+      const {
+        currentGame: { playerMoves, playerTime, systemMoves }
+      } = state;
 
       if (isPlayerX) {
         return {
           ...state,
-          playerMoves: playerMoves + 1,
-          playerTime: playerTime + moveTime
+          currentGame: {
+            ...state.currentGame,
+            playerMoves: playerMoves + 1,
+            playerTime: playerTime + moveTime
+          }
         };
       }
 
       return {
         ...state,
-        systemMoves: systemMoves + 1
+        currentGame: {
+          ...state.currentGame,
+          systemMoves: systemMoves + 1
+        }
+      };
+
+    case 'game/RESTART':
+      return {
+        ...state,
+        currentGame: INITIAL_STATE.currentGame
       };
 
     case 'stats/GAME_OVER':

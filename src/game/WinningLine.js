@@ -2,8 +2,8 @@ import React from 'react';
 
 import './WinningLine.css';
 
-const SQUARE_HEIGHT = 33;
 const LINE_HEIGHT = 4;
+const SQUARE_HEIGHT = 33;
 
 const WinningLine = ({ line }) => {
   if (!line) {

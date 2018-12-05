@@ -3,36 +3,30 @@ import React from 'react';
 import './Board.css';
 import Square from './Square';
 
-export default class Board extends React.Component {
-  renderSquare(i) {
-    return (
-      <Square
-        disabled={this.props.disabled}
-        value={this.props.squares[i]}
-        onClick={() => this.props.onClick(i)}
-      />
-    );
-  }
+const BOARD_SIZE = 3;
 
-  render() {
-    return (
-      <div>
-        <div className="board-row">
-          {this.renderSquare(0)}
-          {this.renderSquare(1)}
-          {this.renderSquare(2)}
-        </div>
-        <div className="board-row">
-          {this.renderSquare(3)}
-          {this.renderSquare(4)}
-          {this.renderSquare(5)}
-        </div>
-        <div className="board-row">
-          {this.renderSquare(6)}
-          {this.renderSquare(7)}
-          {this.renderSquare(8)}
-        </div>
+const rows = [...Array(BOARD_SIZE)];
+const columns = [...Array(BOARD_SIZE)];
+
+const Board = ({ disabled, onClick, squares }) => (
+  <>
+    {rows.map((_, rowIndex) => (
+      <div key={rowIndex} className="board-row">
+        {columns.map((_, columnIndex) => {
+          const squareIndex = rowIndex * BOARD_SIZE + columnIndex;
+
+          return (
+            <Square
+              key={squareIndex}
+              disabled={disabled}
+              onClick={() => onClick(squareIndex)}
+              value={squares[squareIndex]}
+            />
+          );
+        })}
       </div>
-    );
-  }
-}
+    ))}
+  </>
+);
+
+export default Board;

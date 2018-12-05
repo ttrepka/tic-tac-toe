@@ -6,15 +6,21 @@ it('returns initial state for unknown action', () => {
 });
 
 it('returns correct state after user movement', () => {
-  let expectedState = { ...INITIAL_STATE, playerMoves: 1, playerTime: 3500 };
+  let expectedState = {
+    ...INITIAL_STATE,
+    currentGame: { ...INITIAL_STATE.currentGame, playerMoves: 1, playerTime: 3500 }
+  };
   let state = reducer(INITIAL_STATE, { type: 'game/MAKE_MOVE', isPlayerX: true, moveTime: 3500 });
   expect(state).toEqual(expectedState);
 
-  expectedState = { ...state, systemMoves: 1 };
+  expectedState = { ...state, currentGame: { ...state.currentGame, systemMoves: 1 } };
   state = reducer(state, { type: 'game/MAKE_MOVE', isPlayerX: false });
   expect(state).toEqual(expectedState);
 
-  expectedState = { ...state, playerMoves: 2, playerTime: 4500 };
+  expectedState = {
+    ...state,
+    currentGame: { ...state.currentGame, playerMoves: 2, playerTime: 4500 }
+  };
   state = reducer(state, { type: 'game/MAKE_MOVE', isPlayerX: true, moveTime: 1000 });
   expect(state).toEqual(expectedState);
 });

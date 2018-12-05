@@ -1,0 +1,13 @@
+.moves {
+  padding: 0;
+  margin: 10px 0;
+  list-style: none;
+}
+
+.moves li {
+  margin: 5px 0;
+}
+
+.move.active {
+  background-color: #ebf376;
+}
